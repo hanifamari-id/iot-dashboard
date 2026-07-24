@@ -165,7 +165,21 @@ export default function RealtimePage() {
           <h2 className="text-lg font-semibold text-gray-900">Sensor Realtime</h2>
           <p className="text-sm text-gray-500">Pembaruan otomatis setiap 3 detik</p>
         </div>
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex gap-2 flex-wrap items-center">
+          <span
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${
+              data.connected
+                ? "bg-green-100 text-green-700"
+                : "bg-red-100 text-red-700"
+            }`}
+          >
+            <span
+              className={`w-1.5 h-1.5 rounded-full ${
+                data.connected ? "bg-green-500" : "bg-red-500 animate-pulse"
+              }`}
+            />
+            {data.connected ? "Tersambung" : "Terputus"}
+          </span>
           <WarningBadge active={data.warningDaily === "WARNING"} label="Limit Harian" />
           <WarningBadge active={data.warningMonthlyHit} label="Limit Bulanan" />
         </div>

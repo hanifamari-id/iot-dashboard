@@ -1,5 +1,5 @@
 ﻿import { NextResponse } from "next/server";
-import { fetchDB } from "@/lib/firebase-rest";
+import { fetchDB, isConnected } from "@/lib/firebase-rest";
 import { parseNumber } from "@/lib/parse";
 
 export async function GET() {
@@ -78,6 +78,7 @@ export async function GET() {
       },
       usageDaily: parseNumber(uDaily.today),
       usageMonthly: parseNumber(uMonthly.total),
+      connected: isConnected(),
     });
   } catch (error) {
     console.error("Error fetching realtime data:", error);

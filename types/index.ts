@@ -39,6 +39,7 @@ export interface RealtimeResponse {
   mode: Mode;
   usageDaily: number;
   usageMonthly: number;
+  connected: boolean;
 }
 
 export interface RiwayatEntry {

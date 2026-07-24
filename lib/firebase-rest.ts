@@ -5,6 +5,11 @@ const AUTH_PASSWORD = process.env.FIREBASE_AUTH_PASSWORD!;
 
 let cachedToken: string | null = null;
 let tokenExpiresAt = 0;
+let lastConnected = false;
+
+export function isConnected(): boolean {
+  return lastConnected;
+}
 
 async function signIn(): Promise<string> {
   const res = await fetch(
@@ -21,6 +26,7 @@ async function signIn(): Promise<string> {
   );
 
   if (!res.ok) {
+    lastConnected = false;
     const err = await res.json();
     throw new Error(`Firebase auth gagal: ${err.error?.message || res.statusText}`);
   }
@@ -44,10 +50,12 @@ export async function fetchDB<T = unknown>(path: string): Promise<T> {
   const res = await fetch(url);
 
   if (!res.ok) {
+    lastConnected = false;
     const err = await res.json();
     throw new Error(`Firebase fetch gagal (${path}): ${err.error || res.statusText}`);
   }
 
+  lastConnected = true;
   const text = await res.text();
   if (text === "null") return null as T;
   return JSON.parse(text) as T;
