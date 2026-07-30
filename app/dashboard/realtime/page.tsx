@@ -97,6 +97,21 @@ export default function RealtimePage() {
   const [daily, setDaily] = useState<DailyResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [clock, setClock] = useState("00:00:00");
+
+  useEffect(() => {
+    let clockActive = true;
+    function updateClock() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, "0");
+      const m = String(now.getMinutes()).padStart(2, "0");
+      const s = String(now.getSeconds()).padStart(2, "0");
+      if (clockActive) setClock(`${h}:${m}:${s}`);
+    }
+    updateClock();
+    const timer = setInterval(updateClock, 1000);
+    return () => { clockActive = false; clearInterval(timer); };
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -160,12 +175,16 @@ export default function RealtimePage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-2">
+        <div className="flex items-center justify-between flex-wrap gap-2">
         <div>
           <h2 className="text-lg font-semibold text-gray-900">Sensor Realtime</h2>
           <p className="text-sm text-gray-500">Pembaruan otomatis setiap 3 detik</p>
         </div>
         <div className="flex gap-2 flex-wrap items-center">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 tabular-nums">
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            {clock}
+          </span>
           <span
             className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${
               data.connected

@@ -72,6 +72,16 @@ export interface MonthlyResponse {
   current: MonthlyUsage;
 }
 
+export interface HourlyEntry {
+  hour: string;
+  kwh: number;
+  rupiah: number;
+}
+
+export interface HourlyResponse {
+  history: HourlyEntry[];
+}
+
 export interface SessionData {
   isLoggedIn: boolean;
 }
