@@ -1,7 +1,18 @@
-const API_KEY = process.env.FIREBASE_API_KEY || "";
-const DB_URL = (process.env.FIREBASE_DB_URL || "").replace(/\/+$/, "");
-const AUTH_EMAIL = process.env.FIREBASE_AUTH_EMAIL || "";
-const AUTH_PASSWORD = process.env.FIREBASE_AUTH_PASSWORD || "";
+function getApiKey(): string {
+  return process.env.FIREBASE_API_KEY || "";
+}
+
+function getDbUrl(): string {
+  return (process.env.FIREBASE_DB_URL || "").replace(/\/+$/, "");
+}
+
+function getAuthEmail(): string {
+  return process.env.FIREBASE_AUTH_EMAIL || "";
+}
+
+function getAuthPassword(): string {
+  return process.env.FIREBASE_AUTH_PASSWORD || "";
+}
 
 let cachedToken: string | null = null;
 let tokenExpiresAt = 0;
@@ -12,14 +23,25 @@ export function isConnected(): boolean {
 }
 
 async function signIn(): Promise<string> {
+  const apiKey = getApiKey();
+  const email = getAuthEmail();
+  const password = getAuthPassword();
+
+  if (!apiKey || !email || !password) {
+    lastConnected = false;
+    throw new Error(
+      "Firebase auth failed: Missing FIREBASE_API_KEY, FIREBASE_AUTH_EMAIL, or FIREBASE_AUTH_PASSWORD environment variables."
+    );
+  }
+
   const res = await fetch(
-    `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY}`,
+    `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        email: AUTH_EMAIL,
-        password: AUTH_PASSWORD,
+        email,
+        password,
         returnSecureToken: true,
       }),
     }
@@ -45,8 +67,16 @@ async function getToken(): Promise<string> {
 }
 
 export async function fetchDB<T = unknown>(path: string): Promise<T> {
+  const dbUrl = getDbUrl();
+  if (!dbUrl) {
+    lastConnected = false;
+    throw new Error(
+      "Firebase fetch failed: Missing FIREBASE_DB_URL environment variable."
+    );
+  }
+
   const token = await getToken();
-  const url = `${DB_URL}/${path}.json?auth=${token}`;
+  const url = `${dbUrl}/${path}.json?auth=${token}`;
   const res = await fetch(url);
 
   if (!res.ok) {
