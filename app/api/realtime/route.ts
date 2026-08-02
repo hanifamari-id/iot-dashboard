@@ -41,7 +41,7 @@ export async function GET() {
     const pzem1 = (s.pzem1 || {}) as Record<string, unknown>;
     const pzem2 = (s.pzem2 || {}) as Record<string, unknown>;
     const dht = (s.dht || {}) as Record<string, unknown>;
-    const pir = (s.pir as string) || "NO MOTION";
+    const pir = typeof s.pir === "string" ? s.pir : String(s.pir ?? "NO MOTION");
 
     const auto = (automation || {}) as Record<string, unknown>;
     const lim = (limit || {}) as Record<string, unknown>;

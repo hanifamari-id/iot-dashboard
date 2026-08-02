@@ -314,6 +314,15 @@ function SystemStatusCard({
 }
 
 function EnvCard({ data }: { data: RealtimeResponse }) {
+  const pirUpper = String(data.pir || "").toUpperCase();
+  const isMotion =
+    pirUpper.includes("MOTION DETECTED") ||
+    pirUpper === "MOTION" ||
+    pirUpper === "DETECTED" ||
+    pirUpper === "TRUE" ||
+    pirUpper === "1" ||
+    (pirUpper.includes("MOTION") && !pirUpper.includes("NO"));
+
   return (
     <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm space-y-4">
       <p className="text-xs text-gray-400 uppercase tracking-wider font-medium">
@@ -335,10 +344,10 @@ function EnvCard({ data }: { data: RealtimeResponse }) {
         <span className="text-gray-500 text-sm">🚶 PIR Motion</span>
         <span
           className={`font-semibold text-sm ${
-            data.pir === "MOTION" ? "text-yellow-600" : "text-gray-400"
+            isMotion ? "text-yellow-600" : "text-gray-400"
           }`}
         >
-          {data.pir === "MOTION" ? "Motion" : "No Motion"}
+          {isMotion ? "Motion Detected" : "No Motion"}
         </span>
       </div>
     </div>
