@@ -1,7 +1,7 @@
-const API_KEY = process.env.FIREBASE_API_KEY!;
-const DB_URL = process.env.FIREBASE_DB_URL!.replace(/\/+$/, "");
-const AUTH_EMAIL = process.env.FIREBASE_AUTH_EMAIL!;
-const AUTH_PASSWORD = process.env.FIREBASE_AUTH_PASSWORD!;
+const API_KEY = process.env.FIREBASE_API_KEY || "";
+const DB_URL = (process.env.FIREBASE_DB_URL || "").replace(/\/+$/, "");
+const AUTH_EMAIL = process.env.FIREBASE_AUTH_EMAIL || "";
+const AUTH_PASSWORD = process.env.FIREBASE_AUTH_PASSWORD || "";
 
 let cachedToken: string | null = null;
 let tokenExpiresAt = 0;

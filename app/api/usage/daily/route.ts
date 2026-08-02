@@ -1,4 +1,6 @@
-﻿import { NextResponse } from "next/server";
+export const dynamic = "force-dynamic";
+
+import { NextResponse } from "next/server";
 import { fetchDB } from "@/lib/firebase-rest";
 import { parseRiwayatEntry } from "@/lib/parse";
 

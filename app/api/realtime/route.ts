@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { NextResponse } from "next/server";
 import { fetchDB, isConnected } from "@/lib/firebase-rest";
 import { parseNumber } from "@/lib/parse";
