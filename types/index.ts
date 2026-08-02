@@ -82,6 +82,22 @@ export interface HourlyResponse {
   history: HourlyEntry[];
 }
 
+export interface MinuteEntry {
+  minute: string;
+  kwh: number;
+  rupiah: number;
+}
+
+export interface MinuteResponse {
+  history: MinuteEntry[];
+  current: {
+    current: number;
+    currentRupiah: string;
+    lastMinuteKey: string;
+    minuteStartEnergy: number;
+  };
+}
+
 export interface SessionData {
   isLoggedIn: boolean;
 }

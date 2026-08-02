@@ -10,8 +10,8 @@ export function parseRiwayatEntry(value: string): {
   kwh: number;
   rupiah: number;
 } {
-  const kwhMatch = value.match(/kwh:\s*([\d.]+)/);
-  const rupiahMatch = value.match(/rupiah:\s*([\d.]+)/);
+  const kwhMatch = value.match(/k[wW]h:\s*([\d.]+)/);
+  const rupiahMatch = value.match(/rupiah:\s*([\d.]+)/) ?? value.match(/rp:\s*([\d.]+)/i);
   return {
     kwh: kwhMatch ? parseFloat(kwhMatch[1]) : 0,
     rupiah: rupiahMatch ? parseFloat(rupiahMatch[1]) : 0,

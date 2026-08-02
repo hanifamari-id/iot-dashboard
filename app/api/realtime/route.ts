@@ -1,4 +1,4 @@
-﻿import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { fetchDB, isConnected } from "@/lib/firebase-rest";
 import { parseNumber } from "@/lib/parse";
 
@@ -12,6 +12,7 @@ export async function GET() {
       automation,
       limit,
       mode,
+      state,
       usageDaily,
       usageMonthly,
     ] = await Promise.all([
@@ -22,6 +23,7 @@ export async function GET() {
       fetchDB("automation"),
       fetchDB("limit"),
       fetchDB("mode"),
+      fetchDB("state"),
       fetchDB("usage/daily"),
       fetchDB("usage/monthly"),
     ]);
@@ -40,20 +42,22 @@ export async function GET() {
     const pir = (s.pir as string) || "NO MOTION";
 
     const auto = (automation || {}) as Record<string, unknown>;
-    const autoTemp = (auto.temp || {}) as Record<string, boolean>;
     const lim = (limit || {}) as Record<string, unknown>;
     const mod = (mode || {}) as Record<string, unknown>;
+    const st = (state || {}) as Record<string, unknown>;
     const uDaily = (usageDaily || {}) as Record<string, unknown>;
     const uMonthly = (usageMonthly || {}) as Record<string, unknown>;
+    const currentMode = (mod.current as string) || "normal";
+    const modeState = ((st[currentMode] || {}) as Record<string, unknown>);
 
     return NextResponse.json({
       pzem1: {
-        power: parseNumber(pzem1.power),
-        energy: parseNumber(pzem1.energy),
-      },
-      pzem2: {
         power: parseNumber(pzem2.power),
         energy: parseNumber(pzem2.energy),
+      },
+      pzem2: {
+        power: parseNumber(pzem1.power),
+        energy: parseNumber(pzem1.energy),
       },
       dht: {
         temp: (dht.temp as string) || "-",
@@ -65,8 +69,8 @@ export async function GET() {
       warningMonthlyHit: warningMonthlyHit === true,
       automation: {
         temp: {
-          terminal1: autoTemp.terminal1 === true,
-          terminal2: autoTemp.terminal2 === true,
+          terminal1: modeState.terminal1 !== true,
+          terminal2: modeState.terminal2 !== true,
         },
       },
       limit: {
